@@ -7,8 +7,17 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/ecr/types"
 )
 
+type EcrBatchGetImageAPI interface {
+	BatchGetImage(ctx context.Context, params *ecr.BatchGetImageInput, optFns ...func(*ecr.Options)) (*ecr.BatchGetImageOutput, error)
+}
+
+type EcrClient interface {
+	BatchGetImage(ctx context.Context, params *ecr.BatchGetImageInput, optFns ...func(*ecr.Options)) (*ecr.BatchGetImageOutput, error)
+	PutImage(ctx context.Context, params *ecr.PutImageInput, optFns ...func(*ecr.Options)) (*ecr.PutImageOutput, error)
+}
+
 type EcrService struct {
-	Client *ecr.Client
+	Client EcrClient
 }
 
 func (s *EcrService) GetImageManifest(repository string, imageTag string) (string, error) {
